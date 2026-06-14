@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+body {
+  background: #080808;
+  color: #fff;
+  font-family: 'Barlow', system-ui, sans-serif;
+}
+
+.font-heading {
+  font-family: 'Barlow Condensed', system-ui, sans-serif;
+}
+
+.btn-primary {
+  background: #f5e400;
+  color: #080808;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  transition: background 150ms;
+  display: inline-block;
+}
+.btn-primary:hover { background: #e6c200; }
+
+.btn-outline {
+  border: 1px solid #3f3f46;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  transition: border-color 150ms;
+  display: inline-block;
+}
+.btn-outline:hover { border-color: #fff; }
+
+.card-section {
+  background: #111;
+  border: 1px solid #27272a;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color 150ms;
+}
+.card-section:hover { border-color: #f5e400; }
+.card-section:hover .card-title { color: #f5e400; }
+.card-title { transition: color 150ms; }
