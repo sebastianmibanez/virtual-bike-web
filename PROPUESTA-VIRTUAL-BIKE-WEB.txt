@@ -1,0 +1,322 @@
+PROPUESTA TÉCNICA Y COMERCIAL
+Virtual Bike — Sitio Web Completo 2026
+======================================================================
+
+
+PARTE I: ENTREGA YA REALIZADA — Landing Clásica CVBK 2026
+Valor cobrado: $500.000 CLP
+======================================================================
+
+CONTEXTO: QUÉ SE ABSORBIÓ
+--------------------------
+El cliente contaba con un intento anterior de otro desarrollador basado
+en WordPress que no funcionaba como sistema de inscripción. Se tomó ese
+proyecto, se descartó el frontend roto y se construyó todo desde cero
+sobre una arquitectura profesional.
+
+
+LO QUE SE CONSTRUYÓ
+======================================================================
+
+FRONTEND — React + Vite (16 componentes)
+-----------------------------------------
+
+  Hero            Slideshow automático con 5 fotos reales, countdown en
+                  tiempo real, flechas y dots de navegación
+
+  Navbar          Fijo en scroll, efecto glassmorphism al bajar,
+                  hamburger menu mobile con animación
+
+  Inscripcion     Sistema completo en 3 pasos:
+                  formulario → reserva → pago → QR de confirmación
+
+  Galeria         Lightbox interactivo, lazy loading, soporte touch/swipe
+
+  Altimetria      Perfil de ruta interactivo con marcadores, fullscreen mobile
+
+  Patrocinadores  Grid animado con intersection observer
+
+  StickyCTA       Botón flotante persistente en mobile
+
+  PremiosDinero   Tabla de premios por categoría y género
+
+  DiaCarrera      Horarios de salida dinámicos por género/categoría
+
+  SponsorStrip    Strip continuo de marcas con scroll animado
+
+  GeneroSwitch    Selector de género con animación "tirite"
+
+  Categorias      Categorías disponibles por género
+
+  Beneficios      Grid de beneficios del evento
+
+  Dudas           FAQ con accordion
+
+  Field           Input reutilizable con acento cromático según género
+
+  Footer          Logo, redes, autopromocón, copyright
+
+
+Detalles de implementación:
+  - Responsive completo (mobile-first)
+  - Textura "tricota" diagonal de identidad de marca
+  - Animación slow-zoom en fotos del hero
+  - Validación de RUT chileno en tiempo real
+  - Tracking de eventos de usuario (pageview, inicio formulario, reserva)
+  - Contadores en tiempo real de stock de medallones y calcetas
+  - Recuperación de inscripción por RUT+email+teléfono
+  - Modo prueba por URL param (?test=cvbk26)
+
+
+BACKEND — Plugin WordPress (PHP, ~1.100 líneas, 20 endpoints REST)
+-------------------------------------------------------------------
+
+Sistema de inscripción en 3 pasos:
+  1. POST /reservar    guarda datos, reserva el cupo sin cobrar
+  2. POST /pagar       crea orden y redirige a Getnet/PlaceToPay
+  3. Cron automático   verifica pagos pendientes y actualiza la BD
+
+Endpoints públicos:
+  GET  /contadores       stock en tiempo real
+  GET  /inscrito/:id     estado de pago post-retorno desde Getnet
+  POST /mi-inscripcion   recupera QR por RUT+email+teléfono
+  GET  /verificar        escaneo QR en acreditación el día de carrera
+  POST /track            telemetría de comportamiento
+
+Endpoints protegidos (panel admin):
+  GET    /inscritos                  lista completa con filtros
+  GET    /inscritos/export           exportación CSV completa
+  DELETE /inscritos/:id              eliminación
+  PATCH  /inscritos/:id/estado       actualización manual de estado
+  POST   /inscritos/:id/reenviar-qr  reenvío de email con QR
+  POST   /inscritos/:id/recordatorio email de recordatorio
+  GET    /stats                      estadísticas del dashboard
+  POST   /auth                       login JWT para panel admin
+
+
+INTEGRACIONES
+-------------
+  Getnet / PlaceToPay   REST directo. Sin plugin de terceros.
+                        Ciclo completo: crear sesión → redirección
+                        → retorno → verificación de estado
+
+  WooCommerce           Motor de órdenes. Emails nativos suprimidos,
+                        reemplazados por templates HTML propios
+
+  QR HMAC-SHA256        QR firmado digitalmente. Verificable sin internet
+                        el día de la carrera
+
+  Cron Job              Verifica pagos pendientes en Getnet automáticamente
+
+  Email transaccional   Templates HTML propios con QR incrustado
+
+
+SEGURIDAD
+---------
+  CORS              Whitelist estricta de orígenes autorizados
+  Auth admin        JWT HS256 custom con expiración
+  Rate limiting     5 intentos por IP cada 10 minutos
+  Anti-bots         Honeypot + timestamp de carga mínimo (3 seg)
+  Validación RUT    Frontend + Backend
+  Hardening WP      Versión ocultada, generadores eliminados
+  Log de ataques    Registro de IPs y user-agents en BD
+  Guard email spam  Límite de reenvíos por IP por minuto
+
+
+PANEL ADMIN
+-----------
+  - Dashboard KPIs (inscritos, pagados, pendientes, por género)
+  - Tabla con búsqueda, filtros y acciones por fila
+  - Exportación CSV, reenvío de QR, recordatorios
+  - Control de acceso por roles
+
+
+>>> VALOR FASE 1: $500.000 CLP — justificado. <<<
+
+
+======================================================================
+PARTE II: PROPUESTA SITIO WEB COMPLETO
+Virtual Bike — Plataforma digital permanente
+======================================================================
+
+
+ENFOQUE
+-------
+Sitio profesional construido en 1 a 2 meses, orientado a generar ventas
+desde el primer día. Prioridad en que funcione, sea seguro y esté listo
+para recibir tráfico de campañas pagadas (Meta Ads + Google Ads).
+
+
+STACK TECNOLÓGICO
+-----------------
+  Next.js 16        Frontend + API en un solo servicio. SEO nativo.
+  Supabase          Base de datos PostgreSQL + Auth + Storage de imágenes.
+                    Plan gratuito hasta escalar.
+  Getnet/PlaceToPay Misma integración de pago ya probada en el landing.
+  Resend.com        Emails transaccionales. 3.000/mes gratis.
+  Vercel            Hosting optimizado para Next.js. Plan gratuito robusto.
+                    Deploy automático desde Git en segundos.
+  Cloudflare        CDN + protección DDoS. Plan gratuito.
+
+
+QUÉ INCLUYE EL SITIO
+======================================================================
+
+HOME
+----
+  - Hero con identidad de marca Virtual Bike
+  - Secciones: tienda, próximos eventos, galería, socios
+  - Navbar responsive + hamburger mobile
+  - Footer con redes sociales
+  - SEO técnico completo (Open Graph, sitemap, meta tags)
+
+
+TIENDA ONLINE
+-------------
+  - Catálogo de productos con fotos y tallas
+  - Carrito de compras (sin requerir login — más conversiones)
+  - Checkout + pago con Getnet/PlaceToPay
+  - Email de confirmación de compra
+  - Panel admin: gestión de productos, stock, órdenes
+
+
+EVENTOS Y CARRERAS
+------------------
+  - Listado de eventos próximos y pasados
+  - Sistema de inscripción completo (mejorado desde el landing)
+  - QR de acreditación compatible con el sistema actual
+    (los QR ya emitidos siguen siendo válidos)
+  - Panel admin: gestionar inscritos, exportar CSV, reenviar QRs
+
+
+ÁREA DE SOCIOS (básica)
+-----------------------
+  - Registro y login por email
+  - Perfil con historial de compras e inscripciones
+
+
+PANEL ADMIN UNIFICADO
+---------------------
+  - Dashboard: ventas, inscripciones, visitas
+  - Gestión de productos, eventos e inscritos desde una sola interfaz
+  - Exportaciones CSV
+
+
+MARKETING DIGITAL — Meta Ads y Google Ads
+-----------------------------------------
+  Integración técnica para campañas pagas desde el lanzamiento:
+
+  Meta Pixel (Facebook / Instagram Ads)
+    - Pixel instalado en todas las páginas
+    - Eventos de conversión: ver producto, agregar al carrito,
+      compra completada, inscripción completada
+    - Compatible con Meta Conversions API para mayor precisión
+      (iOS 14+ no bloquea las conversiones)
+
+  Google Ads + Google Analytics 4
+    - GA4 configurado con eventos clave
+    - Conversiones de Google Ads (compra, inscripción)
+    - Google Tag Manager si el cliente necesita agregar más tags
+      sin tocar el código
+
+  Esto permite:
+    - Medir el costo por venta / costo por inscripción exacto
+    - Crear audiencias de remarketing (visitó tienda, no compró)
+    - Lookalike audiences para escalar campañas
+
+
+SEGURIDAD
+---------
+  El nuevo sitio hereda y mejora la seguridad del landing:
+
+  Supabase Auth     Autenticación gestionada por infraestructura de nivel
+                    empresarial. Tokens rotados automáticamente.
+
+  Row Level Security  Cada usuario solo accede a sus propios datos.
+                    Configurado a nivel de base de datos, no solo en código.
+
+  HTTPS forzado     Cloudflare + Render garantizan HTTPS en todo momento.
+
+  Variables de entorno  Ninguna clave secreta en el código fuente.
+                    Todo en variables de entorno del servidor.
+
+  Rate limiting     En endpoints de pago e inscripción, igual al sistema actual.
+
+  Validación        Validación de datos en frontend Y en backend.
+                    Nunca se confía solo en el cliente.
+
+  Sin datos de tarjeta  El sitio nunca toca datos de tarjeta de crédito.
+                    Todo el procesamiento ocurre en Getnet/PlaceToPay.
+
+
+INFRAESTRUCTURA — COSTOS MENSUALES
+====================================
+  Vercel (hosting Next.js)  $0  (plan Hobby — hecho por los creadores
+                                 de Next.js, generoso para este uso:
+                                 100GB bandwidth, funciones serverless,
+                                 dominio propio, HTTPS automático)
+  Supabase (BD + auth)      $0  (plan free suficiente para empezar:
+                                 500MB BD, 1GB storage, 50.000 usuarios)
+  Resend.com (email)        $0  (3.000 emails/mes gratis)
+  Cloudflare (CDN + DNS)    $0  (protección DDoS incluida)
+  Dominio virtual-bike.cl   ya existente
+  ─────────────────────────────────────────────────────
+  TOTAL OPERACIONAL         $0/mes para empezar
+
+  Si el sitio crece y necesita más:
+    Vercel Pro               ~$20 USD/mes (~$19.000 CLP)
+    Supabase Pro             ~$25 USD/mes (~$24.000 CLP)
+
+  Estos costos los paga el cliente directamente en sus cuentas.
+  No pasan por el desarrollador.
+
+
+INVERSIÓN Y PLAN DE PAGO
+======================================================================
+
+  DESARROLLO DEL SITIO COMPLETO        $700.000 CLP
+
+  Forma de pago:
+    50% al inicio del proyecto          $350.000 CLP
+    50% a la entrega y publicación      $350.000 CLP
+
+  Tiempo de entrega: 4 a 8 semanas desde el inicio.
+
+
+SOPORTE MENSUAL (desde la entrega)
+====================================
+
+  $50.000 CLP / mes
+
+  Incluye:
+    - 3 horas de trabajo mensual para cambios, ajustes y mejoras
+    - Monitoreo básico del servicio (uptime, errores)
+    - Actualizaciones de seguridad cuando sean necesarias
+    - Respuesta en 48 horas hábiles
+    - Horas adicionales a $20.000 CLP/hora si se requiere más trabajo
+
+  Sin contrato de permanencia. Se puede pausar o cancelar con 30 días
+  de aviso.
+
+
+RESUMEN
+======================================================================
+
+                    Landing CVBK 2026     Sitio web completo
+  ───────────────────────────────────────────────────────────
+  Estado            Entregado             Propuesto
+  Valor             $500.000 CLP          $700.000 CLP
+  Stack             React + WP/PHP        Next.js + Supabase
+  Tiempo            ~6 semanas            4–8 semanas
+  Hosting           WordPress existente   Vercel (gratis para empezar)
+  Pagos             Getnet integrado      Getnet (mismo sistema)
+  Marketing         No incluido           Meta Pixel + GA4 + Ads
+  Soporte           No contratado         $50.000 CLP/mes
+  ───────────────────────────────────────────────────────────
+
+
+======================================================================
+Propuesta preparada por Sebastián Ibáñez
+sebastianm.ibanez@gmail.com · +56 9 3611 5266
+Junio 2026
+======================================================================

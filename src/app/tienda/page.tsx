@@ -1,7 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
+import { firePixelEvent } from '@/components/PixelToast'
 
 type Product = {
   id: string
@@ -10,7 +13,7 @@ type Product = {
   sizes: string[]
   category: string
   tag?: string
-  color: string
+  photo?: string
 }
 
 const PRODUCTS: Product[] = [
@@ -21,7 +24,7 @@ const PRODUCTS: Product[] = [
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     category: 'Jerseys',
     tag: 'Nuevo',
-    color: '#1a1a2e',
+    photo: '/equipo/virtual-bike3.jpg',
   },
   {
     id: 'jersey-ml-2026',
@@ -29,7 +32,7 @@ const PRODUCTS: Product[] = [
     price: 52000,
     sizes: ['S', 'M', 'L', 'XL'],
     category: 'Jerseys',
-    color: '#16213e',
+    photo: '/equipo/virtual-bike4.jpg',
   },
   {
     id: 'bib-short-pro',
@@ -38,7 +41,7 @@ const PRODUCTS: Product[] = [
     sizes: ['XS', 'S', 'M', 'L', 'XL'],
     category: 'Shorts',
     tag: 'Más vendido',
-    color: '#0a0a1a',
+    photo: '/equipo/virtual-bike5.jpg',
   },
   {
     id: 'bib-short-mujer',
@@ -46,7 +49,7 @@ const PRODUCTS: Product[] = [
     price: 58000,
     sizes: ['XS', 'S', 'M', 'L'],
     category: 'Shorts',
-    color: '#1a0a2e',
+    photo: '/equipo/virtual-bike6.jpg',
   },
   {
     id: 'kit-hombre',
@@ -55,7 +58,7 @@ const PRODUCTS: Product[] = [
     sizes: ['S', 'M', 'L', 'XL'],
     category: 'Kits',
     tag: 'Oferta',
-    color: '#0d1b2a',
+    photo: '/equipo/virtual-bike2.jpg',
   },
   {
     id: 'kit-mujer',
@@ -63,7 +66,7 @@ const PRODUCTS: Product[] = [
     price: 95000,
     sizes: ['XS', 'S', 'M', 'L'],
     category: 'Kits',
-    color: '#1a0d2e',
+    photo: '/equipo/virtual-bike3.jpg',
   },
   {
     id: 'calcetas-vbk',
@@ -71,7 +74,6 @@ const PRODUCTS: Product[] = [
     price: 8000,
     sizes: ['35-38', '39-42', '43-46'],
     category: 'Accesorios',
-    color: '#111',
   },
   {
     id: 'gorra-vbk',
@@ -79,7 +81,6 @@ const PRODUCTS: Product[] = [
     price: 15000,
     sizes: ['Única'],
     category: 'Accesorios',
-    color: '#1a1100',
   },
 ]
 
@@ -97,17 +98,39 @@ function ProductCard({ product }: { product: Product }) {
   function handleAdd() {
     if (!selectedSize) return
     addItem({ id: product.id, name: product.name, price: product.price, size: selectedSize, qty: 1 })
+    firePixelEvent('AddToCart', `${product.name} · talla ${selectedSize} · ${fmt(product.price)}`)
     setAdded(true)
     setTimeout(() => setAdded(false), 1500)
   }
 
   return (
     <div className="bg-[#111] border border-white/8 flex flex-col group hover:border-white/20 transition-all duration-200">
-      {/* Imagen placeholder */}
-      <div
-        className="relative h-52 flex items-center justify-center overflow-hidden"
-        style={{ background: `linear-gradient(135deg, ${product.color} 0%, #1a1a1a 100%)` }}
-      >
+      {/* Imagen */}
+      <div className="relative h-52 overflow-hidden bg-[#1a1a1a]">
+        {product.photo ? (
+          <Image
+            src={product.photo}
+            alt={product.name}
+            fill
+            className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-[#111]">
+            <span
+              style={{
+                fontFamily: 'Barlow Condensed',
+                fontWeight: 900,
+                fontSize: '3rem',
+                color: '#f5e400',
+                opacity: 0.15,
+              }}
+            >
+              VBK
+            </span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         {product.tag && (
           <span
             className="absolute top-3 left-3 bg-[#f5e400] text-black text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider"
@@ -116,33 +139,6 @@ function ProductCard({ product }: { product: Product }) {
             {product.tag}
           </span>
         )}
-        <div className="text-center select-none">
-          <div
-            style={{
-              fontFamily: 'Barlow Condensed',
-              fontWeight: 900,
-              fontSize: '3.5rem',
-              color: '#f5e400',
-              lineHeight: 1,
-              opacity: 0.15,
-            }}
-          >
-            VBK
-          </div>
-          <div
-            style={{
-              fontFamily: 'Barlow Condensed',
-              fontWeight: 700,
-              fontSize: '0.65rem',
-              color: 'rgba(255,255,255,0.2)',
-              letterSpacing: '0.3em',
-              textTransform: 'uppercase',
-              marginTop: '0.5rem',
-            }}
-          >
-            Virtual Bike
-          </div>
-        </div>
       </div>
 
       <div className="p-4 flex flex-col gap-3 flex-1">
@@ -158,11 +154,10 @@ function ProductCard({ product }: { product: Product }) {
           </h3>
         </div>
 
-        <p className="text-[#f5e400] text-xl font-bold" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
+        <p className="text-[#f5e400] text-xl" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
           {fmt(product.price)}
         </p>
 
-        {/* Tallas */}
         <div className="flex flex-wrap gap-1.5">
           {product.sizes.map(size => (
             <button
@@ -201,6 +196,7 @@ function ProductCard({ product }: { product: Product }) {
 
 export default function TiendaPage() {
   const [activeCategory, setActiveCategory] = useState('Todos')
+  const { totalItems, openCart } = useCart()
 
   const filtered = activeCategory === 'Todos'
     ? PRODUCTS
@@ -209,28 +205,50 @@ export default function TiendaPage() {
   return (
     <div className="pt-20">
       {/* Hero tienda */}
-      <section className="bg-[#0d0d0d] border-b border-white/5 py-14 px-4">
-        <div className="max-w-6xl mx-auto">
-          <p
-            className="text-white/30 text-xs uppercase tracking-[0.3em] mb-3"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
-          >
-            Virtual Bike · Temporada 2026
-          </p>
-          <h1
-            className="text-white uppercase leading-none"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(3rem, 8vw, 6rem)' }}
-          >
-            Tienda <span style={{ color: '#f5e400' }}>VBK</span>
-          </h1>
-          <p className="text-zinc-500 text-sm mt-3 max-w-md">
-            Ropa técnica de ciclismo diseñada para el equipo. Calidad profesional, identidad Virtual Bike.
-          </p>
+      <section className="bg-[#0d0d0d] border-b border-white/5 py-12 px-4">
+        <div className="max-w-6xl mx-auto flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <p
+              className="text-white/30 text-xs uppercase tracking-[0.3em] mb-3"
+              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+            >
+              Virtual Bike · Temporada 2026
+            </p>
+            <h1
+              className="text-white uppercase leading-none"
+              style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(3rem, 8vw, 6rem)' }}
+            >
+              Tienda <span style={{ color: '#f5e400' }}>VBK</span>
+            </h1>
+            <p className="text-zinc-500 text-sm mt-2 max-w-md">
+              Ropa técnica de ciclismo diseñada para el equipo. Calidad profesional, identidad Virtual Bike.
+            </p>
+          </div>
+          {totalItems > 0 && (
+            <button
+              onClick={openCart}
+              className="flex items-center gap-2 border border-[#f5e400]/40 text-[#f5e400] px-5 py-2.5 hover:bg-[#f5e400] hover:text-black transition-all text-sm uppercase tracking-wider"
+              style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            >
+              Ver carrito ({totalItems}) →
+            </button>
+          )}
         </div>
       </section>
 
-      {/* Filtros por categoría */}
-      <section className="sticky top-[56px] z-30 bg-[#080808]/95 backdrop-blur-md border-b border-white/5">
+      {/* Info strip */}
+      <div className="border-b border-white/5 bg-[#0a0a0a]">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex gap-6 overflow-x-auto">
+          {['📦 Envío disponible en Santiago', '📐 Tallas XS a XL', '🔒 Pago seguro Getnet', '💬 Consultas por WhatsApp'].map(t => (
+            <span key={t} className="text-zinc-500 text-xs whitespace-nowrap" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Filtros */}
+      <div className="sticky top-14 z-30 bg-[#080808]/95 backdrop-blur-md border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto">
           {CATEGORIES.map(cat => (
             <button
@@ -247,9 +265,9 @@ export default function TiendaPage() {
             </button>
           ))}
         </div>
-      </section>
+      </div>
 
-      {/* Grid de productos */}
+      {/* Grid */}
       <section className="max-w-6xl mx-auto px-4 py-10">
         <p className="text-zinc-600 text-xs uppercase tracking-widest mb-6" style={{ fontFamily: 'Barlow Condensed' }}>
           {filtered.length} producto{filtered.length !== 1 ? 's' : ''}
@@ -261,17 +279,27 @@ export default function TiendaPage() {
         </div>
       </section>
 
+      {/* Ir a checkout */}
+      {totalItems > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+          <Link
+            href="/tienda/checkout"
+            className="flex items-center gap-3 bg-[#f5e400] text-black px-8 py-4 uppercase font-bold tracking-wider text-sm shadow-2xl shadow-[#f5e400]/30 hover:bg-white transition-all"
+            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '1rem' }}
+          >
+            Ir al checkout ({totalItems} ítem{totalItems > 1 ? 's' : ''}) →
+          </Link>
+        </div>
+      )}
+
       {/* Banner contacto */}
-      <section className="max-w-6xl mx-auto px-4 pb-16">
+      <section className="max-w-6xl mx-auto px-4 pb-20">
         <div className="border border-white/8 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <h3
-              className="text-white text-2xl uppercase"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
-            >
-              ¿Necesitas talla especial o pedido personalizado?
+            <h3 className="text-white text-2xl uppercase" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>
+              ¿Necesitas talla especial o pedido de equipo?
             </h3>
-            <p className="text-zinc-500 text-sm mt-1">Contáctanos directamente por WhatsApp.</p>
+            <p className="text-zinc-500 text-sm mt-1">Contáctanos por WhatsApp para pedidos personalizados.</p>
           </div>
           <a
             href="https://wa.me/56999542821"
