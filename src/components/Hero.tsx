@@ -52,6 +52,8 @@ export default function Hero() {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />
+          {/* Gradiente superior para que el navbar sea siempre legible */}
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/60 to-transparent" />
         </div>
       ))}
 
@@ -65,7 +67,7 @@ export default function Hero() {
         </span>
         <h1
           className="text-white uppercase leading-[0.86] drop-shadow-2xl"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(4rem, 12vw, 9rem)' }}
+          style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(2.8rem, 8vw, 6rem)' }}
         >
           Virtual
           <br />

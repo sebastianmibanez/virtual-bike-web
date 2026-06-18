@@ -54,14 +54,14 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-zinc-400 hover:text-white transition-colors text-sm uppercase tracking-widest font-medium"
+              className="text-white/80 hover:text-white transition-colors text-sm uppercase tracking-widest font-medium drop-shadow-md"
             >
               {l.label}
             </Link>
           ))}
           <button
             onClick={openCart}
-            className="relative text-zinc-400 hover:text-white transition-colors"
+            className="relative text-white/80 hover:text-white transition-colors drop-shadow-md"
             aria-label="Carrito"
           >
             <CartIcon />
