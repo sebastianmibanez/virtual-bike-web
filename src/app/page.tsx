@@ -1,5 +1,7 @@
 import Hero from '@/components/Hero'
 import SponsorStrip from '@/components/SponsorStrip'
+import CategoryGrid from '@/components/CategoryGrid'
+import FeaturedProducts from '@/components/FeaturedProducts'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -10,42 +12,10 @@ const TRUST = [
   { icon: '💬', text: 'Soporte por WhatsApp' },
 ]
 
-const SECTIONS = [
-  {
-    href: '/tienda',
-    label: 'Tienda',
-    desc: 'Ropa técnica para ciclismo con el sello Virtual Bike. Jerseys, bib shorts, calcetas y más.',
-    cta: 'Ver colección',
-    icon: '👕',
-  },
-  {
-    href: '/eventos',
-    label: 'Eventos',
-    desc: 'Carreras y actividades del equipo. Clásica CVBK, salidas grupales y más.',
-    cta: 'Ver calendario',
-    icon: '🏁',
-  },
-  {
-    href: '/galeria',
-    label: 'Galería',
-    desc: 'Fotos de nuestras salidas, competencias y momentos del equipo.',
-    cta: 'Ver galería',
-    icon: '📸',
-  },
-  {
-    href: '/socios',
-    label: 'Socios',
-    desc: 'Acceso exclusivo para miembros del club. Historial y beneficios.',
-    cta: 'Área socios',
-    icon: '⭐',
-  },
-]
-
 export default function Home() {
   return (
     <>
       <Hero />
-
       <SponsorStrip />
 
       {/* Trust signals */}
@@ -65,16 +35,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Producto destacado */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <p
-          className="text-zinc-600 text-xs uppercase tracking-[0.3em] mb-6"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
-        >
-          Destacado · Temporada 2026
-        </p>
+      {/* Categorías con parallax */}
+      <CategoryGrid />
+
+      {/* Productos destacados */}
+      <div className="border-t border-white/5">
+        <FeaturedProducts />
+      </div>
+
+      {/* Producto destacado editorial */}
+      <section className="max-w-6xl mx-auto px-4 pb-16">
         <div className="grid md:grid-cols-2 overflow-hidden border border-white/8">
-          {/* Foto */}
           <div className="relative h-72 md:h-auto min-h-[280px]">
             <Image
               src="/equipo/virtual-bike2.jpg"
@@ -82,16 +53,16 @@ export default function Home() {
               fill
               className="object-cover object-center"
               sizes="(max-width: 768px) 100vw, 50vw"
+              quality={90}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/20" />
           </div>
-          {/* Detalle */}
           <div className="bg-[#111] p-8 md:p-12 flex flex-col justify-center">
             <span
               className="text-[#f5e400] text-xs uppercase tracking-[0.25em] mb-4 block"
               style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
             >
-              Kit completo
+              Kit completo · Temporada 2026
             </span>
             <h2
               className="text-white uppercase leading-tight mb-4"
@@ -124,41 +95,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Secciones del sitio */}
-      <section className="max-w-6xl mx-auto px-4 pb-16">
-        <p
-          className="text-zinc-600 text-xs uppercase tracking-[0.3em] mb-6"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
-        >
-          Todo en Virtual Bike
-        </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {SECTIONS.map(s => (
-            <Link
-              key={s.href}
-              href={s.href}
-              className="group bg-[#111] border border-white/8 hover:border-[#f5e400]/50 p-6 flex flex-col gap-3 transition-all duration-200"
-            >
-              <span className="text-2xl">{s.icon}</span>
-              <h2
-                className="text-white text-2xl uppercase group-hover:text-[#f5e400] transition-colors"
-                style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
-              >
-                {s.label}
-              </h2>
-              <p className="text-zinc-500 text-sm flex-1 leading-relaxed">{s.desc}</p>
-              <span
-                className="text-[#f5e400]/60 group-hover:text-[#f5e400] transition-colors text-xs uppercase tracking-[0.15em]"
-                style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
-              >
-                {s.cta} →
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Banner amarillo CTA */}
+      {/* Banner CTA */}
       <section className="bg-[#f5e400]">
         <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
