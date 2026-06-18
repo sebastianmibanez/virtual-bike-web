@@ -279,19 +279,6 @@ export default function TiendaPage() {
         </div>
       </section>
 
-      {/* Ir a checkout */}
-      {totalItems > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-          <Link
-            href="/tienda/checkout"
-            className="flex items-center gap-3 bg-[#f5e400] text-black px-8 py-4 uppercase font-bold tracking-wider text-sm shadow-2xl shadow-[#f5e400]/30 hover:bg-white transition-all"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '1rem' }}
-          >
-            Ir al checkout ({totalItems} ítem{totalItems > 1 ? 's' : ''}) →
-          </Link>
-        </div>
-      )}
-
       {/* Banner contacto */}
       <section className="max-w-6xl mx-auto px-4 pb-20">
         <div className="border border-white/8 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
