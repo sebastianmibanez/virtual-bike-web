@@ -5,11 +5,13 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const SLIDES = [
-  { src: '/equipo/virtual-bike2.jpg', alt: 'Equipo Virtual Bike' },
-  { src: '/equipo/virtual-bike3.jpg', alt: 'Equipo Virtual Bike' },
-  { src: '/equipo/virtual-bike4.jpg', alt: 'Equipo Virtual Bike' },
-  { src: '/equipo/virtual-bike5.jpg', alt: 'Equipo Virtual Bike' },
-  { src: '/equipo/virtual-bike6.jpg', alt: 'Equipo Virtual Bike' },
+  { src: '/clasica/clasica1.jpg', alt: 'Clásica Virtual Bike 2026' },
+  { src: '/clasica/clasica2.jpg', alt: 'Clásica Virtual Bike 2026' },
+  { src: '/clasica/clasica3.jpg', alt: 'Clásica Virtual Bike 2026' },
+  { src: '/clasica/clasica4.jpg', alt: 'Clásica Virtual Bike 2026' },
+  { src: '/clasica/clasica5.jpg', alt: 'Clásica Virtual Bike 2026' },
+  { src: '/clasica/clasica6.jpg', alt: 'Clásica Virtual Bike 2026' },
+  { src: '/clasica/clasica7.jpg', alt: 'Clásica Virtual Bike 2026' },
 ]
 
 export default function Hero() {
@@ -46,6 +48,7 @@ export default function Hero() {
             className="object-cover object-center"
             priority={i === 0}
             sizes="100vw"
+            quality={90}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/20 to-transparent" />

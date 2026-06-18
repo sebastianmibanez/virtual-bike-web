@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero'
+import SponsorStrip from '@/components/SponsorStrip'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -44,6 +45,8 @@ export default function Home() {
   return (
     <>
       <Hero />
+
+      <SponsorStrip />
 
       {/* Trust signals */}
       <section className="border-b border-white/5 bg-[#0d0d0d]">
