@@ -29,12 +29,14 @@ export default function Hero() {
   const prev = useCallback(() => goTo((current - 1 + SLIDES.length) % SLIDES.length), [current, goTo])
 
   useEffect(() => {
+    // No autoavanzar si el usuario prefiere movimiento reducido
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const t = setInterval(next, 4000)
     return () => clearInterval(t)
   }, [next])
 
   return (
-    <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-black">
+    <section className="relative w-full h-screen min-h-[600px] overflow-hidden bg-black" aria-roledescription="carrusel" aria-label="Imágenes destacadas">
       {/* Slideshow */}
       {SLIDES.map((s, i) => (
         <div
@@ -61,13 +63,13 @@ export default function Hero() {
       <div className="absolute left-6 md:left-16 bottom-24 md:bottom-28 z-10 max-w-xl">
         <span
           className="block text-white/50 text-xs uppercase tracking-[0.3em] mb-5 font-semibold"
-          style={{ fontFamily: 'Barlow Condensed' }}
+          style={{ fontFamily: 'var(--font-condensed)' }}
         >
           🚴 Equipo de ciclismo · Santiago, Chile
         </span>
         <h1
           className="text-white uppercase leading-[0.86] drop-shadow-2xl"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(2.8rem, 8vw, 6rem)' }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: 'clamp(2.8rem, 8vw, 6rem)' }}
         >
           Virtual
           <br />
@@ -80,14 +82,14 @@ export default function Hero() {
           <Link
             href="/tienda"
             className="inline-block bg-[#f5e400] text-black px-8 py-3.5 text-sm uppercase font-bold tracking-wider hover:bg-white transition-all duration-200 hover:scale-105 shadow-xl shadow-[#f5e400]/20"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
           >
             Ver tienda →
           </Link>
           <Link
             href="/eventos"
             className="inline-block border border-white/30 text-white px-8 py-3.5 text-sm uppercase font-bold tracking-wider hover:border-white transition-all duration-200"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
           >
             Próximos eventos
           </Link>
@@ -97,6 +99,7 @@ export default function Hero() {
       {/* Flecha izquierda */}
       <button
         onClick={prev}
+        aria-label="Imagen anterior"
         className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/20 hover:border-white/70 bg-black/30 hover:bg-black/60 flex items-center justify-center text-white text-xl transition-all backdrop-blur-sm z-10"
       >
         ‹
@@ -105,6 +108,7 @@ export default function Hero() {
       {/* Flecha derecha */}
       <button
         onClick={next}
+        aria-label="Imagen siguiente"
         className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border border-white/20 hover:border-white/70 bg-black/30 hover:bg-black/60 flex items-center justify-center text-white text-xl transition-all backdrop-blur-sm z-10"
       >
         ›
@@ -116,6 +120,8 @@ export default function Hero() {
           <button
             key={i}
             onClick={() => goTo(i)}
+            aria-label={`Ir a la imagen ${i + 1}`}
+            aria-current={i === current}
             className={`rounded-full transition-all duration-300 ${
               i === current ? 'w-7 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
             }`}

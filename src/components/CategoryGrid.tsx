@@ -20,102 +20,6 @@ const CATEGORIES: Category[] = [
   { name: 'Eventos',   count: 'Próxima edición', image: '/clasica/clasica7.jpg',    href: '/eventos' },
 ]
 
-function CategoryCard({ cat }: { cat: Category }) {
-  const ref = useRef<HTMLAnchorElement>(null)
-  const [hovered, setHovered] = useState(false)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
-
-  const handleMove = useCallback((e: React.MouseEvent) => {
-    if (!ref.current) return
-    const rect = ref.current.getBoundingClientRect()
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-    setPos({ x, y })
-  }, [])
-
-  const handleLeave = useCallback(() => {
-    setHovered(false)
-    setPos({ x: 0, y: 0 })
-  }, [])
-
-  const imgTransform = `scale(${hovered ? 1.08 : 1}) translate(${pos.x * -18}px, ${pos.y * -18}px)`
-
-  return (
-    <Link
-      ref={ref}
-      href={cat.href}
-      className={`relative overflow-hidden block group ${cat.tall ? 'row-span-1 md:row-span-2' : ''}`}
-      style={{ height: cat.tall ? undefined : '240px' }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-    >
-      {/* Imagen con parallax */}
-      <div
-        className="absolute inset-[-8%] will-change-transform"
-        style={{ transform: imgTransform, transition: 'transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)' }}
-      >
-        <Image
-          src={cat.image}
-          alt={cat.name}
-          fill
-          className="object-cover object-center"
-          sizes="(max-width: 768px) 100vw, 50vw"
-          quality={90}
-        />
-      </div>
-
-      {/* Overlay */}
-      <div
-        className="absolute inset-0 transition-all duration-500"
-        style={{
-          background: hovered
-            ? 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%)'
-            : 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.15) 100%)',
-        }}
-      />
-
-      {/* Texto */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 flex items-end justify-between">
-        <div>
-          <h3
-            className="text-white uppercase leading-none transition-all duration-300"
-            style={{
-              fontFamily: 'Barlow Condensed',
-              fontWeight: 900,
-              fontSize: cat.tall ? 'clamp(2rem, 4vw, 3rem)' : '1.75rem',
-              transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-            }}
-          >
-            {cat.name}
-          </h3>
-          <p
-            className="text-white/50 text-xs uppercase tracking-widest mt-1 transition-all duration-300"
-            style={{
-              fontFamily: 'Barlow Condensed',
-              fontWeight: 700,
-              transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-            }}
-          >
-            {cat.count}
-          </p>
-        </div>
-        <span
-          className="text-[#f5e400] text-sm uppercase tracking-wider transition-all duration-300"
-          style={{
-            fontFamily: 'Barlow Condensed',
-            fontWeight: 800,
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? 'translateX(0)' : 'translateX(8px)',
-          }}
-        >
-          Ver →
-        </span>
-      </div>
-    </Link>
-  )
-}
-
 export default function CategoryGrid() {
   const [big, ...rest] = CATEGORIES
 
@@ -124,14 +28,14 @@ export default function CategoryGrid() {
       <div className="flex items-baseline justify-between mb-6">
         <p
           className="text-white/30 text-xs uppercase tracking-[0.3em]"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
         >
           Nuestra colección
         </p>
         <Link
           href="/tienda"
           className="text-[#f5e400] text-xs uppercase tracking-widest hover:underline"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
         >
           Ver todo →
         </Link>
@@ -208,7 +112,7 @@ function BigCard({ cat }: { cat: Category }) {
           <h3
             className="text-white uppercase leading-none"
             style={{
-              fontFamily: 'Barlow Condensed',
+              fontFamily: 'var(--font-condensed)',
               fontWeight: 900,
               fontSize: 'clamp(2.5rem, 5vw, 4rem)',
               transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
@@ -220,7 +124,7 @@ function BigCard({ cat }: { cat: Category }) {
           <p
             className="text-white/50 text-xs uppercase tracking-widest mt-2"
             style={{
-              fontFamily: 'Barlow Condensed', fontWeight: 700,
+              fontFamily: 'var(--font-condensed)', fontWeight: 700,
               transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
               transition: 'transform 0.35s ease-out 0.03s',
             }}
@@ -231,7 +135,7 @@ function BigCard({ cat }: { cat: Category }) {
         <span
           className="text-[#f5e400] uppercase tracking-wider"
           style={{
-            fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '1rem',
+            fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '1rem',
             opacity: hovered ? 1 : 0,
             transform: hovered ? 'translateX(0)' : 'translateX(12px)',
             transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
@@ -288,7 +192,7 @@ function SmallCard({ cat }: { cat: Category }) {
         <h3
           className="text-white uppercase leading-none"
           style={{
-            fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: '1.4rem',
+            fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '1.4rem',
             transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
             transition: 'transform 0.3s ease-out',
           }}
@@ -298,7 +202,7 @@ function SmallCard({ cat }: { cat: Category }) {
         <p
           className="text-white/50 text-[10px] uppercase tracking-widest mt-1"
           style={{
-            fontFamily: 'Barlow Condensed', fontWeight: 700,
+            fontFamily: 'var(--font-condensed)', fontWeight: 700,
             opacity: hovered ? 1 : 0.6,
             transition: 'opacity 0.3s ease-out',
           }}

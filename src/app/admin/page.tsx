@@ -49,18 +49,18 @@ export default function AdminPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
           <div>
-            <p className="text-zinc-500 text-xs uppercase tracking-[0.25em] mb-1" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+            <p className="text-zinc-500 text-xs uppercase tracking-[0.25em] mb-1" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
               Panel de administración
             </p>
-            <h1 className="text-white text-3xl uppercase" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
+            <h1 className="text-white text-3xl uppercase" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}>
               Virtual Bike <span style={{ color: '#f5e400' }}>Admin</span>
             </h1>
           </div>
           <div className="flex gap-2">
-            <Link href="/tienda" className="border border-white/10 text-zinc-400 text-xs px-4 py-2 hover:text-white hover:border-white/30 transition-colors uppercase tracking-wider" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+            <Link href="/tienda" className="border border-white/10 text-zinc-400 text-xs px-4 py-2 hover:text-white hover:border-white/30 transition-colors uppercase tracking-wider" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
               Ver tienda
             </Link>
-            <button className="bg-[#f5e400] text-black text-xs px-4 py-2 uppercase font-bold tracking-wider hover:bg-white transition-colors" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>
+            <button className="bg-[#f5e400] text-black text-xs px-4 py-2 uppercase font-bold tracking-wider hover:bg-white transition-colors" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>
               Exportar CSV
             </button>
           </div>
@@ -70,10 +70,10 @@ export default function AdminPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
           {STATS.map(s => (
             <div key={s.label} className="bg-[#111] border border-white/8 p-5">
-              <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+              <p className="text-zinc-500 text-xs uppercase tracking-widest mb-2" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
                 {s.label}
               </p>
-              <p className="text-white text-2xl md:text-3xl font-bold" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, color: s.color }}>
+              <p className="text-white text-2xl md:text-3xl font-bold" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, color: s.color }}>
                 {s.value}
               </p>
               <p className="text-zinc-600 text-xs mt-1">{s.sub}</p>
@@ -85,7 +85,7 @@ export default function AdminPage() {
           {/* Tabla de pedidos */}
           <div className="bg-[#111] border border-white/8">
             <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
-              <h2 className="text-white uppercase text-base" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>Pedidos recientes</h2>
+              <h2 className="text-white uppercase text-base" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>Pedidos recientes</h2>
               <span className="text-zinc-600 text-xs">{ORDERS.length} pedidos</span>
             </div>
             <div className="overflow-x-auto">
@@ -93,19 +93,19 @@ export default function AdminPage() {
                 <thead>
                   <tr className="border-b border-white/5">
                     {['ID', 'Cliente', 'Producto', 'Monto', 'Estado', 'Fecha'].map(h => (
-                      <th key={h} className="text-left text-zinc-600 text-[10px] uppercase tracking-widest px-5 py-3 font-semibold" style={{ fontFamily: 'Barlow Condensed' }}>{h}</th>
+                      <th key={h} className="text-left text-zinc-600 text-[10px] uppercase tracking-widest px-5 py-3 font-semibold" style={{ fontFamily: 'var(--font-condensed)' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {ORDERS.map((o, i) => (
                     <tr key={o.id} className={`border-b border-white/5 hover:bg-white/3 transition-colors ${i % 2 === 0 ? '' : 'bg-white/[0.01]'}`}>
-                      <td className="px-5 py-3 text-zinc-500 text-xs" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>{o.id}</td>
+                      <td className="px-5 py-3 text-zinc-500 text-xs" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>{o.id}</td>
                       <td className="px-5 py-3 text-white text-sm">{o.cliente}</td>
                       <td className="px-5 py-3 text-zinc-400 text-xs">{o.producto}</td>
                       <td className="px-5 py-3 text-white font-semibold whitespace-nowrap">{fmt(o.monto)}</td>
                       <td className="px-5 py-3">
-                        <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border font-bold ${BADGE[o.estado].cls}`} style={{ fontFamily: 'Barlow Condensed' }}>
+                        <span className={`text-[10px] uppercase tracking-wider px-2 py-0.5 border font-bold ${BADGE[o.estado].cls}`} style={{ fontFamily: 'var(--font-condensed)' }}>
                           {BADGE[o.estado].label}
                         </span>
                       </td>
@@ -119,7 +119,7 @@ export default function AdminPage() {
 
           {/* Gráfico semanal */}
           <div className="bg-[#111] border border-white/8 p-5">
-            <h2 className="text-white uppercase text-base mb-1" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>Pedidos esta semana</h2>
+            <h2 className="text-white uppercase text-base mb-1" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>Pedidos esta semana</h2>
             <p className="text-zinc-500 text-xs mb-6">93 pedidos en los últimos 7 días</p>
             <div className="flex items-end gap-2 h-32">
               {WEEKLY.map(w => (
@@ -133,13 +133,13 @@ export default function AdminPage() {
                       minHeight: '4px',
                     }}
                   />
-                  <span className="text-zinc-600 text-[10px]" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>{w.day}</span>
+                  <span className="text-zinc-600 text-[10px]" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>{w.day}</span>
                 </div>
               ))}
             </div>
 
             <div className="mt-6 pt-5 border-t border-white/5 space-y-3">
-              <p className="text-zinc-500 text-xs uppercase tracking-widest mb-3" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+              <p className="text-zinc-500 text-xs uppercase tracking-widest mb-3" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
                 Acciones rápidas
               </p>
               {[
@@ -148,7 +148,7 @@ export default function AdminPage() {
                 { label: 'Exportar inscritos CSV', href: '#' },
                 { label: 'Reenviar QR a cliente', href: '#' },
               ].map(a => (
-                <button key={a.label} className="w-full text-left text-zinc-400 hover:text-white text-xs uppercase tracking-wider transition-colors flex items-center justify-between group" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+                <button key={a.label} className="w-full text-left text-zinc-400 hover:text-white text-xs uppercase tracking-wider transition-colors flex items-center justify-between group" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
                   {a.label}
                   <span className="text-zinc-700 group-hover:text-[#f5e400] transition-colors">→</span>
                 </button>

@@ -8,13 +8,30 @@ import Link from 'next/link'
 const TRUST = [
   { icon: '🛒', text: 'Sin registro requerido' },
   { icon: '🔒', text: 'Pago seguro Getnet' },
-  { icon: '📦', text: 'Envío en Santiago' },
+  { icon: '📦', text: 'Despacho a todo Chile' },
   { icon: '💬', text: 'Soporte por WhatsApp' },
 ]
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://virtual-bike.cl'
+
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportingGoodsStore',
+  name: 'Virtual Bike',
+  url: SITE_URL,
+  description: 'Ropa técnica de ciclismo, eventos y comunidad ciclista en Santiago de Chile.',
+  image: `${SITE_URL}/equipo/virtual-bike2.jpg`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Santiago', addressCountry: 'CL' },
+  sameAs: ['https://www.instagram.com/virtual_bike_cl'],
+}
 
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
       <Hero />
       <SponsorStrip />
 
@@ -26,7 +43,7 @@ export default function Home() {
               <span className="text-base">{t.icon}</span>
               <span
                 className="text-zinc-400 text-xs uppercase tracking-widest"
-                style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+                style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
               >
                 {t.text}
               </span>
@@ -60,13 +77,13 @@ export default function Home() {
           <div className="bg-[#111] p-8 md:p-12 flex flex-col justify-center">
             <span
               className="text-[#f5e400] text-xs uppercase tracking-[0.25em] mb-4 block"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
             >
               Kit completo · Temporada 2026
             </span>
             <h2
               className="text-white uppercase leading-tight mb-4"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
             >
               Jersey + Bib Short<br />
               <span style={{ color: '#f5e400' }}>Virtual Bike</span>
@@ -78,7 +95,7 @@ export default function Home() {
             <div className="flex items-baseline gap-3 mb-6">
               <span
                 className="text-[#f5e400] text-3xl"
-                style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}
+                style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}
               >
                 $95.000
               </span>
@@ -87,7 +104,7 @@ export default function Home() {
             <Link
               href="/tienda"
               className="inline-block bg-[#f5e400] text-black px-8 py-3.5 uppercase font-bold tracking-wider text-sm hover:bg-white transition-all duration-200 self-start"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
             >
               Ver en tienda →
             </Link>
@@ -101,13 +118,13 @@ export default function Home() {
           <div>
             <p
               className="text-black/40 text-xs uppercase tracking-[0.25em] mb-1"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
             >
               Temporada 2026
             </p>
             <h2
               className="text-black uppercase leading-none"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}
             >
               Nueva colección<br />disponible ahora
             </h2>
@@ -115,7 +132,7 @@ export default function Home() {
           <Link
             href="/tienda"
             className="bg-black text-[#f5e400] px-10 py-4 uppercase font-bold tracking-wider text-sm hover:bg-zinc-900 transition-colors whitespace-nowrap"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '1rem' }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '1rem' }}
           >
             Ir a la tienda →
           </Link>

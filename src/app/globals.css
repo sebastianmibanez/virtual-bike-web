@@ -3,11 +3,11 @@
 body {
   background: #080808;
   color: #fff;
-  font-family: 'Barlow', system-ui, sans-serif;
+  font-family: var(--font-barlow), system-ui, sans-serif;
 }
 
 .font-heading {
-  font-family: 'Barlow Condensed', system-ui, sans-serif;
+  font-family: var(--font-condensed), system-ui, sans-serif;
 }
 
 .btn-primary {
@@ -58,4 +58,23 @@ body {
 @keyframes sponsor-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-33.333%); }
+}
+.sponsor-track {
+  animation: sponsor-scroll 28s linear infinite;
+  width: max-content;
+}
+.sponsor-track:hover {
+  animation-play-state: paused;
+}
+
+/* Respeta la preferencia del sistema de reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

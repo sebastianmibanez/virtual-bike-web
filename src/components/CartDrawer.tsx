@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
 
 function fmt(n: number) {
@@ -30,7 +31,7 @@ export default function CartDrawer() {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-          <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff' }}>
+          <span style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#fff' }}>
             Carrito {totalItems > 0 && <span style={{ color: '#f5e400' }}>({totalItems})</span>}
           </span>
           <button onClick={closeCart} className="text-zinc-400 hover:text-white transition-colors text-2xl leading-none">
@@ -47,7 +48,7 @@ export default function CartDrawer() {
               <button
                 onClick={closeCart}
                 className="mt-2 text-[#f5e400] text-sm uppercase tracking-widest font-semibold hover:underline"
-                style={{ fontFamily: 'Barlow Condensed' }}
+                style={{ fontFamily: 'var(--font-condensed)' }}
               >
                 Ver tienda →
               </button>
@@ -57,7 +58,7 @@ export default function CartDrawer() {
               <div key={`${item.id}__${item.size}`} className="flex gap-3 border-b border-white/5 pb-4">
                 {/* Color block placeholder */}
                 <div className="w-16 h-16 bg-[#1a1a1a] border border-white/10 flex-shrink-0 flex items-center justify-center">
-                  <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: '0.65rem', color: '#f5e400', letterSpacing: '0.05em', textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.2 }}>VBK</span>
+                  <span style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '0.65rem', color: '#f5e400', letterSpacing: '0.05em', textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.2 }}>VBK</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-sm font-medium truncate">{item.name}</p>
@@ -97,16 +98,18 @@ export default function CartDrawer() {
           <div className="px-6 py-5 border-t border-white/10 space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-zinc-400 text-sm uppercase tracking-wider">Total</span>
-              <span className="text-white text-xl font-bold" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>{fmt(totalPrice)}</span>
+              <span className="text-white text-xl font-bold" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}>{fmt(totalPrice)}</span>
             </div>
-            <button
-              className="w-full bg-[#f5e400] text-black py-4 uppercase font-bold tracking-wider text-sm hover:bg-white transition-colors"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            <Link
+              href="/tienda/checkout"
+              onClick={closeCart}
+              className="block w-full bg-[#f5e400] text-black py-4 text-center uppercase font-bold tracking-wider text-sm hover:bg-white transition-colors"
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
             >
               Ir al checkout →
-            </button>
+            </Link>
             <p className="text-zinc-600 text-xs text-center">
-              Pago seguro vía Getnet / PlaceToPay
+              Pago seguro vía Getnet
             </p>
           </div>
         )}

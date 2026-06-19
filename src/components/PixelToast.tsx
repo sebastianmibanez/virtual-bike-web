@@ -36,7 +36,7 @@ export default function PixelToast() {
           <div>
             <p
               className="text-green-400 text-xs font-bold uppercase tracking-wider"
-              style={{ fontFamily: 'Barlow Condensed', letterSpacing: '0.1em' }}
+              style={{ fontFamily: 'var(--font-condensed)', letterSpacing: '0.1em' }}
             >
               Meta Pixel · {ev.name}
             </p>

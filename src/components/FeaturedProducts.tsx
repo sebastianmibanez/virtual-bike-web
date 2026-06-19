@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState, useCallback } from 'react'
+import { useRef, useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
@@ -15,7 +15,19 @@ function ProductCard({ product }: { product: typeof FEATURED[0] }) {
   const [pos, setPos] = useState({ x: 0, y: 0 })
   const [selectedSize, setSelectedSize] = useState('')
   const [added, setAdded] = useState(false)
+  // En dispositivos táctiles no hay hover: mostramos las tallas siempre.
+  const [canHover, setCanHover] = useState(true)
   const { addItem } = useCart()
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover)')
+    const update = () => setCanHover(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
+  const sizesVisible = hovered || !canHover
 
   const handleMove = useCallback((e: React.MouseEvent) => {
     if (!ref.current) return
@@ -65,7 +77,7 @@ function ProductCard({ product }: { product: typeof FEATURED[0] }) {
           </div>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#111] flex items-center justify-center">
-            <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: '3rem', color: '#f5e400', opacity: 0.15 }}>VBK</span>
+            <span style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: '3rem', color: '#f5e400', opacity: 0.15 }}>VBK</span>
           </div>
         )}
 
@@ -78,27 +90,33 @@ function ProductCard({ product }: { product: typeof FEATURED[0] }) {
         {product.tag && (
           <span
             className="absolute top-3 left-3 bg-[#f5e400] text-black text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider z-10"
-            style={{ fontFamily: 'Barlow Condensed' }}
+            style={{ fontFamily: 'var(--font-condensed)' }}
           >
             {product.tag}
           </span>
         )}
 
-        {/* Tallas aparecen en hover */}
+        {/* Tallas: aparecen en hover (desktop) o siempre visibles (táctil) */}
         <div
           className="absolute bottom-0 left-0 right-0 p-3 flex flex-wrap gap-1.5 transition-all duration-300"
-          style={{ opacity: hovered ? 1 : 0, transform: hovered ? 'translateY(0)' : 'translateY(8px)' }}
+          style={{
+            opacity: sizesVisible ? 1 : 0,
+            transform: sizesVisible ? 'translateY(0)' : 'translateY(8px)',
+            background: !canHover ? 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)' : undefined,
+          }}
         >
           {product.sizes.map(size => (
             <button
               key={size}
               onClick={() => setSelectedSize(size === selectedSize ? '' : size)}
+              aria-pressed={selectedSize === size}
+              aria-label={`Talla ${size}`}
               className={`text-xs px-2 py-1 border transition-all duration-150 ${
                 selectedSize === size
                   ? 'border-[#f5e400] bg-[#f5e400] text-black font-bold'
                   : 'border-white/40 bg-black/60 text-white hover:border-white backdrop-blur-sm'
               }`}
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
             >
               {size}
             </button>
@@ -110,14 +128,16 @@ function ProductCard({ product }: { product: typeof FEATURED[0] }) {
       <div className="pt-4 flex flex-col gap-2">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="text-zinc-500 text-[10px] uppercase tracking-widest" style={{ fontFamily: 'Barlow Condensed' }}>
+            <p className="text-zinc-500 text-[10px] uppercase tracking-widest" style={{ fontFamily: 'var(--font-condensed)' }}>
               {product.category}
             </p>
-            <h3 className="text-white text-lg leading-tight" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
-              {product.name}
+            <h3 className="text-white text-lg leading-tight" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
+              <Link href={`/tienda/${product.id}`} className="hover:text-[#f5e400] transition-colors">
+                {product.name}
+              </Link>
             </h3>
           </div>
-          <span className="text-[#f5e400] text-lg whitespace-nowrap" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
+          <span className="text-[#f5e400] text-lg whitespace-nowrap" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}>
             {fmt(product.price)}
           </span>
         </div>
@@ -132,9 +152,9 @@ function ProductCard({ product }: { product: typeof FEATURED[0] }) {
               ? 'bg-[#f5e400] text-black hover:bg-white'
               : 'bg-white/5 text-zinc-600 cursor-not-allowed'
           }`}
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
         >
-          {added ? '✓ Agregado' : selectedSize ? 'Agregar al carrito' : 'Pasa el cursor · elige talla'}
+          {added ? '✓ Agregado' : selectedSize ? 'Agregar al carrito' : 'Elige tu talla'}
         </button>
       </div>
     </div>
@@ -148,13 +168,13 @@ export default function FeaturedProducts() {
         <div>
           <p
             className="text-white/30 text-xs uppercase tracking-[0.3em] mb-1"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
           >
             Selección del equipo
           </p>
           <h2
             className="text-white uppercase"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: 'clamp(1.8rem, 4vw, 3rem)' }}
           >
             Productos <span style={{ color: '#f5e400' }}>destacados</span>
           </h2>
@@ -162,7 +182,7 @@ export default function FeaturedProducts() {
         <Link
           href="/tienda"
           className="text-[#f5e400] text-xs uppercase tracking-widest hover:underline hidden sm:block"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
         >
           Ver colección completa →
         </Link>
@@ -178,7 +198,7 @@ export default function FeaturedProducts() {
         <Link
           href="/tienda"
           className="text-[#f5e400] text-xs uppercase tracking-widest"
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
         >
           Ver colección completa →
         </Link>

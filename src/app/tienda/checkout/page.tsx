@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useCart } from '@/context/CartContext'
 import { firePixelEvent } from '@/components/PixelToast'
@@ -39,10 +38,10 @@ const EMPTY: FormData = { nombre: '', email: '', telefono: '', direccion: '', co
 
 export default function CheckoutPage() {
   const { items, totalPrice, clear } = useCart()
-  const router = useRouter()
   const [form, setForm] = useState<FormData>(EMPTY)
   const [errors, setErrors] = useState<Partial<FormData>>({})
   const [loading, setLoading] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   useEffect(() => {
     if (items.length > 0) {
@@ -62,20 +61,33 @@ export default function CheckoutPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setSubmitError('')
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
     setLoading(true)
-    firePixelEvent('Purchase', `${fmt(totalPrice)} · ${items.length} producto${items.length > 1 ? 's' : ''}`)
-    sessionStorage.setItem('vbk_order', JSON.stringify({
-      nombre: form.nombre,
-      email: form.email,
-      total: totalPrice,
-      items: items.length,
-      orderId: 'VBK-2026-' + (1090 + Math.floor(Math.random() * 10)),
-    }))
-    await new Promise(r => setTimeout(r, 1800))
-    clear()
-    router.push('/tienda/confirmacion')
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer: form,
+          items: items.map(i => ({ id: i.id, size: i.size, qty: i.qty })),
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.redirectUrl) {
+        setSubmitError(data.error ?? 'No se pudo procesar el pedido. Intenta nuevamente.')
+        setLoading(false)
+        return
+      }
+      // El pedido quedó registrado en el servidor: vaciamos el carrito y
+      // redirigimos al pago de Getnet (o a la confirmación si es coordinación manual).
+      clear()
+      window.location.href = data.redirectUrl
+    } catch {
+      setSubmitError('Error de conexión. Revisa tu internet e intenta nuevamente.')
+      setLoading(false)
+    }
   }
 
   const set = (k: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -87,8 +99,8 @@ export default function CheckoutPage() {
     return (
       <div className="pt-24 pb-16 flex flex-col items-center justify-center gap-6 text-center px-4">
         <span className="text-5xl opacity-30">🛒</span>
-        <h1 className="text-white text-2xl" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>Tu carrito está vacío</h1>
-        <Link href="/tienda" className="bg-[#f5e400] text-black px-8 py-3 uppercase font-bold tracking-wider text-sm" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>
+        <h1 className="text-white text-2xl" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>Tu carrito está vacío</h1>
+        <Link href="/tienda" className="bg-[#f5e400] text-black px-8 py-3 uppercase font-bold tracking-wider text-sm" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>
           Ir a la tienda →
         </Link>
       </div>
@@ -99,13 +111,13 @@ export default function CheckoutPage() {
     <div className="pt-20 pb-16 min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* Breadcrumb */}
-        <nav className="flex items-center gap-2 text-zinc-600 text-xs uppercase tracking-widest mb-8" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+        <nav className="flex items-center gap-2 text-zinc-600 text-xs uppercase tracking-widest mb-8" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
           <Link href="/tienda" className="hover:text-white transition-colors">Tienda</Link>
           <span>›</span>
           <span className="text-zinc-400">Checkout</span>
         </nav>
 
-        <h1 className="text-white text-4xl uppercase mb-8" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
+        <h1 className="text-white text-4xl uppercase mb-8" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}>
           Datos de entrega
         </h1>
 
@@ -142,12 +154,12 @@ export default function CheckoutPage() {
               <textarea value={form.notas} onChange={set('notas')} rows={3} placeholder="Instrucciones de entrega, departamento, etc." className={inputCls(false) + ' resize-none'} />
             </Field>
 
-            {/* Seguridad */}
+            {/* Seguridad — declaraciones reales */}
             <div className="flex flex-wrap gap-4 pt-2">
-              {['Pago 100% seguro', 'Datos encriptados SSL', 'Sin cargos ocultos'].map(t => (
+              {['Pago procesado por Getnet', 'No almacenamos tu tarjeta', 'Conexión cifrada (HTTPS)'].map(t => (
                 <div key={t} className="flex items-center gap-1.5">
                   <span className="text-[#f5e400] text-xs">✓</span>
-                  <span className="text-zinc-500 text-xs uppercase tracking-widest" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>{t}</span>
+                  <span className="text-zinc-500 text-xs uppercase tracking-widest" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>{t}</span>
                 </div>
               ))}
             </div>
@@ -156,7 +168,7 @@ export default function CheckoutPage() {
           {/* Resumen del pedido */}
           <div>
             <div className="bg-[#111] border border-white/8 p-6 sticky top-24">
-              <h2 className="text-white text-lg uppercase mb-4" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>
+              <h2 className="text-white text-lg uppercase mb-4" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>
                 Resumen del pedido
               </h2>
               <div className="space-y-3 mb-5">
@@ -177,24 +189,30 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-zinc-500 text-sm">
                   <span>Envío</span>
-                  <span className="text-green-400">Por coordinar</span>
+                  <span className="text-zinc-400">Se coordina tras la compra</span>
                 </div>
-                <div className="flex justify-between text-white text-xl font-bold pt-2" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
+                <div className="flex justify-between text-white text-xl font-bold pt-2" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}>
                   <span>Total</span>
                   <span style={{ color: '#f5e400' }}>{fmt(totalPrice)}</span>
                 </div>
               </div>
 
+              {submitError && (
+                <p className="mt-4 text-red-400 text-xs text-center border border-red-500/30 bg-red-500/5 py-2 px-3">
+                  {submitError}
+                </p>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}
                 className={`mt-5 w-full py-4 uppercase font-bold tracking-wider text-sm transition-all ${loading ? 'bg-zinc-700 text-zinc-500 cursor-wait' : 'bg-[#f5e400] text-black hover:bg-white'}`}
-                style={{ fontFamily: 'Barlow Condensed', fontWeight: 800, fontSize: '1rem' }}
+                style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800, fontSize: '1rem' }}
               >
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="animate-spin text-base">◌</span>
-                    Procesando pago...
+                    Redirigiendo al pago...
                   </span>
                 ) : (
                   'Pagar con Getnet →'
@@ -203,7 +221,7 @@ export default function CheckoutPage() {
 
               <div className="mt-4 flex items-center justify-center gap-2">
                 <span className="text-zinc-600 text-[10px] uppercase tracking-wider">Pago seguro vía</span>
-                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider">Getnet · PlaceToPay</span>
+                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider">Getnet</span>
               </div>
             </div>
           </div>
@@ -216,7 +234,7 @@ export default function CheckoutPage() {
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-zinc-400 text-xs uppercase tracking-widest mb-1.5" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+      <label className="block text-zinc-400 text-xs uppercase tracking-widest mb-1.5" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
         {label}
       </label>
       {children}

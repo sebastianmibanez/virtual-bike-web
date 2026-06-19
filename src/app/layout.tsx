@@ -1,56 +1,64 @@
 import type { Metadata } from 'next'
+import { Barlow, Barlow_Condensed } from 'next/font/google'
 import './globals.css'
 import { CartProvider } from '@/context/CartContext'
 import Navbar from '@/components/Navbar'
 import CartDrawer from '@/components/CartDrawer'
 import PixelToast from '@/components/PixelToast'
+import SiteFooter from '@/components/SiteFooter'
+
+const barlow = Barlow({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-barlow',
+  display: 'swap',
+})
+
+const barlowCondensed = Barlow_Condensed({
+  subsets: ['latin'],
+  weight: ['600', '700', '800', '900'],
+  variable: '--font-condensed',
+  display: 'swap',
+})
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://virtual-bike.cl'
 
 export const metadata: Metadata = {
-  title: 'Virtual Bike — Tienda y Eventos',
-  description: 'Ropa técnica de ciclismo, próximos eventos y comunidad. Virtual-Bike.cl',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'Virtual Bike — Tienda de ciclismo y eventos',
+    template: '%s · Virtual Bike',
+  },
+  description:
+    'Ropa técnica de ciclismo, próximos eventos y comunidad ciclista en Santiago de Chile. Jerseys, kits, bib shorts y accesorios del equipo Virtual Bike.',
+  keywords: ['ciclismo', 'ropa ciclismo', 'jersey ciclismo', 'bib short', 'Virtual Bike', 'Santiago', 'Chile'],
+  openGraph: {
+    type: 'website',
+    locale: 'es_CL',
+    url: SITE_URL,
+    siteName: 'Virtual Bike',
+    title: 'Virtual Bike — Tienda de ciclismo y eventos',
+    description: 'Ropa técnica de ciclismo, próximos eventos y comunidad ciclista en Santiago de Chile.',
+    images: [{ url: '/equipo/virtual-bike2.jpg', width: 1200, height: 630, alt: 'Virtual Bike' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Virtual Bike — Tienda de ciclismo y eventos',
+    description: 'Ropa técnica de ciclismo, próximos eventos y comunidad ciclista en Santiago de Chile.',
+    images: ['/equipo/virtual-bike2.jpg'],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className="h-full antialiased">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="es" className={`h-full antialiased ${barlow.variable} ${barlowCondensed.variable}`}>
       <body className="min-h-full flex flex-col">
         <CartProvider>
           <Navbar />
           <CartDrawer />
           <PixelToast />
           <main className="flex-1">{children}</main>
-          <footer className="border-t border-white/5 bg-[#080808]">
-            <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-600 text-sm">
-              <span style={{ fontFamily: 'Barlow Condensed', fontWeight: 700, letterSpacing: '0.05em' }}>
-                © {new Date().getFullYear()} Virtual-Bike.cl · Todos los derechos reservados
-              </span>
-              <div className="flex gap-6 items-center">
-                <a href="https://www.instagram.com/virtual_bike_cl" target="_blank" rel="noopener noreferrer"
-                  className="hover:text-[#f5e400] transition-colors uppercase tracking-widest text-xs"
-                  style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
-                  Instagram
-                </a>
-                <a href="https://wa.me/56999542821" target="_blank" rel="noopener noreferrer"
-                  className="hover:text-[#f5e400] transition-colors uppercase tracking-widest text-xs"
-                  style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
-                  WhatsApp
-                </a>
-                <a href="/admin"
-                  className="hover:text-[#f5e400] transition-colors uppercase tracking-widest text-xs border border-zinc-800 px-2 py-0.5"
-                  style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
-                  Admin →
-                </a>
-              </div>
-            </div>
-          </footer>
+          <SiteFooter />
         </CartProvider>
       </body>
     </html>
