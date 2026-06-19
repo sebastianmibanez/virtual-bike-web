@@ -1,0 +1,12 @@
+refactor: pago por WhatsApp (sin pasarela por ahora), elimina Getnet
+
+- Quita integracion Getnet/PlaceToPay (el cliente perdio la suscripcion)
+- Checkout registra el pedido y coordina pago/despacho por WhatsApp
+- Confirmacion con boton WhatsApp prellenado (orden, items, total, despacho)
+- Resumen del pedido guardado en sessionStorage para armar el mensaje
+- API /checkout y /status sin dependencia de pasarela; la orden persiste en Supabase si esta configurado
+- Migracion con columnas neutrales (payment_provider/payment_ref)
+- Copy de UI sin marca Getnet (home, tienda, carrito, footer, checkout, info)
+- Arquitectura lista para enchufar Flow/Webpay/Mercado Pago a futuro
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>

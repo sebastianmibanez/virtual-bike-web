@@ -109,7 +109,7 @@ export default function CartDrawer() {
               Ir al checkout →
             </Link>
             <p className="text-zinc-600 text-xs text-center">
-              Pago seguro vía Getnet
+              Coordinamos el pago por WhatsApp
             </p>
           </div>
         )}

@@ -80,8 +80,23 @@ export default function CheckoutPage() {
         setLoading(false)
         return
       }
-      // El pedido quedó registrado en el servidor: vaciamos el carrito y
-      // redirigimos al pago de Getnet (o a la confirmación si es coordinación manual).
+      // Guardamos el resumen del pedido en la sesión del navegador para que la
+      // confirmación arme el mensaje de WhatsApp con el detalle completo, aun si
+      // la persistencia en Supabase no estuviera configurada.
+      try {
+        sessionStorage.setItem('vbk_last_order', JSON.stringify({
+          orderNumber: data.orderNumber,
+          nombre: form.nombre,
+          email: form.email,
+          telefono: form.telefono,
+          direccion: form.direccion,
+          comuna: form.comuna,
+          region: form.region,
+          total: totalPrice,
+          items: items.map(i => ({ name: i.name, size: i.size, qty: i.qty, price: i.price })),
+        }))
+      } catch {}
+      // El pedido quedó registrado: vaciamos el carrito y vamos a la confirmación.
       clear()
       window.location.href = data.redirectUrl
     } catch {
@@ -156,7 +171,7 @@ export default function CheckoutPage() {
 
             {/* Seguridad — declaraciones reales */}
             <div className="flex flex-wrap gap-4 pt-2">
-              {['Pago procesado por Getnet', 'No almacenamos tu tarjeta', 'Conexión cifrada (HTTPS)'].map(t => (
+              {['Confirmas tu pedido sin pagar online', 'Coordinamos el pago por WhatsApp', 'Conexión cifrada (HTTPS)'].map(t => (
                 <div key={t} className="flex items-center gap-1.5">
                   <span className="text-[#f5e400] text-xs">✓</span>
                   <span className="text-zinc-500 text-xs uppercase tracking-widest" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>{t}</span>
@@ -212,17 +227,16 @@ export default function CheckoutPage() {
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="animate-spin text-base">◌</span>
-                    Redirigiendo al pago...
+                    Enviando pedido...
                   </span>
                 ) : (
-                  'Pagar con Getnet →'
+                  'Confirmar pedido →'
                 )}
               </button>
 
-              <div className="mt-4 flex items-center justify-center gap-2">
-                <span className="text-zinc-600 text-[10px] uppercase tracking-wider">Pago seguro vía</span>
-                <span className="text-zinc-500 text-[10px] font-bold uppercase tracking-wider">Getnet</span>
-              </div>
+              <p className="mt-4 text-zinc-600 text-[11px] text-center leading-relaxed">
+                Registramos tu pedido y te contactamos por WhatsApp para coordinar el pago y el despacho.
+              </p>
             </div>
           </div>
         </form>

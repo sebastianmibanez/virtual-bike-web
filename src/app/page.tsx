@@ -7,9 +7,9 @@ import Link from 'next/link'
 
 const TRUST = [
   { icon: '🛒', text: 'Sin registro requerido' },
-  { icon: '🔒', text: 'Pago seguro Getnet' },
+  { icon: '🤝', text: 'Coordinamos tu pago' },
   { icon: '📦', text: 'Despacho a todo Chile' },
-  { icon: '💬', text: 'Soporte por WhatsApp' },
+  { icon: '💬', text: 'Atención por WhatsApp' },
 ]
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://virtual-bike.cl'

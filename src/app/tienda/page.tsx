@@ -166,7 +166,7 @@ export default function TiendaPage() {
       {/* Info strip */}
       <div className="border-b border-white/5 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto px-4 py-3 flex gap-6 overflow-x-auto">
-          {['📦 Despacho a todo Chile · retiro en Santiago', '📐 Tallas XS a XL', '🔒 Pago seguro Getnet', '💬 Consultas por WhatsApp'].map(t => (
+          {['📦 Despacho a todo Chile · retiro en Santiago', '📐 Tallas XS a XL', '🤝 Coordinamos el pago contigo', '💬 Consultas por WhatsApp'].map(t => (
             <span key={t} className="text-zinc-500 text-xs whitespace-nowrap" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
               {t}
             </span>
