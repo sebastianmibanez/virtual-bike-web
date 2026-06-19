@@ -42,7 +42,7 @@ export default function Navbar() {
           />
           <span
             className="text-white text-xl uppercase tracking-wider"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
           >
             Virtual-Bike.cl
           </span>
@@ -108,7 +108,7 @@ export default function Navbar() {
               href={l.href}
               onClick={() => setMenuOpen(false)}
               className="text-zinc-300 text-xl uppercase tracking-widest"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
             >
               {l.label}
             </Link>
@@ -117,7 +117,7 @@ export default function Navbar() {
             href="/tienda"
             onClick={() => setMenuOpen(false)}
             className="mt-2 bg-[#f5e400] text-black text-center py-3 uppercase tracking-wider font-bold"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
           >
             Ver tienda →
           </Link>

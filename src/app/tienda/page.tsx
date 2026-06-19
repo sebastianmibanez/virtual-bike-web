@@ -29,7 +29,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <div className="bg-[#111] border border-white/8 flex flex-col group hover:border-white/20 transition-all duration-200">
       {/* Imagen */}
-      <div className="relative h-52 overflow-hidden bg-[#1a1a1a]">
+      <Link href={`/tienda/${product.id}`} className="relative h-52 overflow-hidden bg-[#1a1a1a] block" aria-label={`Ver ${product.name}`}>
         {product.photo ? (
           <Image
             src={product.photo}
@@ -42,7 +42,7 @@ function ProductCard({ product }: { product: Product }) {
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#1a1a1a] to-[#111]">
             <span
               style={{
-                fontFamily: 'Barlow Condensed',
+                fontFamily: 'var(--font-condensed)',
                 fontWeight: 900,
                 fontSize: '3rem',
                 color: '#f5e400',
@@ -57,27 +57,29 @@ function ProductCard({ product }: { product: Product }) {
         {product.tag && (
           <span
             className="absolute top-3 left-3 bg-[#f5e400] text-black text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider"
-            style={{ fontFamily: 'Barlow Condensed' }}
+            style={{ fontFamily: 'var(--font-condensed)' }}
           >
             {product.tag}
           </span>
         )}
-      </div>
+      </Link>
 
       <div className="p-4 flex flex-col gap-3 flex-1">
         <div>
-          <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-1" style={{ fontFamily: 'Barlow Condensed' }}>
+          <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-1" style={{ fontFamily: 'var(--font-condensed)' }}>
             {product.category}
           </p>
           <h3
             className="text-white text-lg leading-tight"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
           >
-            {product.name}
+            <Link href={`/tienda/${product.id}`} className="hover:text-[#f5e400] transition-colors">
+              {product.name}
+            </Link>
           </h3>
         </div>
 
-        <p className="text-[#f5e400] text-xl" style={{ fontFamily: 'Barlow Condensed', fontWeight: 900 }}>
+        <p className="text-[#f5e400] text-xl" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900 }}>
           {fmt(product.price)}
         </p>
 
@@ -86,12 +88,14 @@ function ProductCard({ product }: { product: Product }) {
             <button
               key={size}
               onClick={() => setSelectedSize(size === selectedSize ? '' : size)}
+              aria-pressed={selectedSize === size}
+              aria-label={`Talla ${size}`}
               className={`text-xs px-2.5 py-1 border transition-all duration-150 ${
                 selectedSize === size
                   ? 'border-[#f5e400] bg-[#f5e400] text-black font-bold'
                   : 'border-white/15 text-zinc-400 hover:border-white/40 hover:text-white'
               }`}
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700, letterSpacing: '0.05em' }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700, letterSpacing: '0.05em' }}
             >
               {size}
             </button>
@@ -108,7 +112,7 @@ function ProductCard({ product }: { product: Product }) {
               ? 'bg-[#f5e400] text-black hover:bg-white'
               : 'bg-white/5 text-zinc-600 cursor-not-allowed'
           }`}
-          style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+          style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
         >
           {added ? '✓ Agregado' : selectedSize ? 'Agregar al carrito' : 'Selecciona talla'}
         </button>
@@ -133,13 +137,13 @@ export default function TiendaPage() {
           <div>
             <p
               className="text-white/30 text-xs uppercase tracking-[0.3em] mb-3"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
             >
               Virtual Bike · Temporada 2026
             </p>
             <h1
               className="text-white uppercase leading-none"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 900, fontSize: 'clamp(3rem, 8vw, 6rem)' }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 900, fontSize: 'clamp(3rem, 8vw, 6rem)' }}
             >
               Tienda <span style={{ color: '#f5e400' }}>VBK</span>
             </h1>
@@ -151,7 +155,7 @@ export default function TiendaPage() {
             <button
               onClick={openCart}
               className="flex items-center gap-2 border border-[#f5e400]/40 text-[#f5e400] px-5 py-2.5 hover:bg-[#f5e400] hover:text-black transition-all text-sm uppercase tracking-wider"
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
             >
               Ver carrito ({totalItems}) →
             </button>
@@ -162,8 +166,8 @@ export default function TiendaPage() {
       {/* Info strip */}
       <div className="border-b border-white/5 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto px-4 py-3 flex gap-6 overflow-x-auto">
-          {['📦 Envío disponible en Santiago', '📐 Tallas XS a XL', '🔒 Pago seguro Getnet', '💬 Consultas por WhatsApp'].map(t => (
-            <span key={t} className="text-zinc-500 text-xs whitespace-nowrap" style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}>
+          {['📦 Despacho a todo Chile · retiro en Santiago', '📐 Tallas XS a XL', '🔒 Pago seguro Getnet', '💬 Consultas por WhatsApp'].map(t => (
+            <span key={t} className="text-zinc-500 text-xs whitespace-nowrap" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}>
               {t}
             </span>
           ))}
@@ -182,7 +186,7 @@ export default function TiendaPage() {
                   ? 'bg-[#f5e400] border-[#f5e400] text-black font-bold'
                   : 'border-white/15 text-zinc-400 hover:border-white/40 hover:text-white'
               }`}
-              style={{ fontFamily: 'Barlow Condensed', fontWeight: 700 }}
+              style={{ fontFamily: 'var(--font-condensed)', fontWeight: 700 }}
             >
               {cat}
             </button>
@@ -192,7 +196,7 @@ export default function TiendaPage() {
 
       {/* Grid */}
       <section className="max-w-6xl mx-auto px-4 py-10">
-        <p className="text-zinc-600 text-xs uppercase tracking-widest mb-6" style={{ fontFamily: 'Barlow Condensed' }}>
+        <p className="text-zinc-600 text-xs uppercase tracking-widest mb-6" style={{ fontFamily: 'var(--font-condensed)' }}>
           {filtered.length} producto{filtered.length !== 1 ? 's' : ''}
         </p>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -206,7 +210,7 @@ export default function TiendaPage() {
       <section className="max-w-6xl mx-auto px-4 pb-20">
         <div className="border border-white/8 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
-            <h3 className="text-white text-2xl uppercase" style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}>
+            <h3 className="text-white text-2xl uppercase" style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}>
               ¿Necesitas talla especial o pedido de equipo?
             </h3>
             <p className="text-zinc-500 text-sm mt-1">Contáctanos por WhatsApp para pedidos personalizados.</p>
@@ -216,7 +220,7 @@ export default function TiendaPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="whitespace-nowrap border border-[#f5e400]/50 text-[#f5e400] px-6 py-3 uppercase text-sm tracking-wider hover:bg-[#f5e400] hover:text-black transition-all"
-            style={{ fontFamily: 'Barlow Condensed', fontWeight: 800 }}
+            style={{ fontFamily: 'var(--font-condensed)', fontWeight: 800 }}
           >
             WhatsApp →
           </a>
