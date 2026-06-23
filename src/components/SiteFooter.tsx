@@ -100,7 +100,7 @@ export default function SiteFooter() {
           >
             © {new Date().getFullYear()} Virtual-Bike.cl · Todos los derechos reservados
           </span>
-          <span className="text-zinc-700 text-xs">Santiago, Chile · Pagos vía Getnet</span>
+          <span className="text-zinc-700 text-xs">Santiago, Chile · Pago coordinado por WhatsApp</span>
         </div>
       </div>
     </footer>

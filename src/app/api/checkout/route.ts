@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildOrderFromCart, generateOrderNumber, validateCustomer, type CustomerInput, type CartLineInput } from '@/lib/orders'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { createPaymentSession, isGetnetConfigured } from '@/lib/getnet'
 
 export async function POST(req: NextRequest) {
   let payload: { customer?: Partial<CustomerInput>; items?: CartLineInput[] }
@@ -52,42 +51,9 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // 2) Crear sesión de pago Getnet (si está configurado)
-  if (isGetnetConfigured()) {
-    const [name, ...rest] = (customer.nombre ?? '').trim().split(' ')
-    const session = await createPaymentSession({
-      reference: orderNumber,
-      description: `Compra Virtual Bike ${orderNumber}`,
-      total: order.total,
-      currency: 'CLP',
-      buyer: {
-        name: name || (customer.nombre as string),
-        surname: rest.join(' '),
-        email: customer.email as string,
-        mobile: customer.telefono,
-      },
-      returnUrl,
-      ipAddress: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? '0.0.0.0',
-      userAgent: req.headers.get('user-agent') ?? 'Mozilla/5.0',
-    })
-
-    if (session.ok && session.processUrl) {
-      if (supabase) {
-        await supabase
-          .from('orders')
-          .update({ getnet_request_id: session.requestId, getnet_process_url: session.processUrl, updated_at: new Date().toISOString() })
-          .eq('order_number', orderNumber)
-      }
-      return NextResponse.json({ orderNumber, redirectUrl: session.processUrl, mode: 'getnet' })
-    }
-
-    // Si Getnet falla, no simulamos un pago: informamos el error.
-    return NextResponse.json(
-      { error: session.message ?? 'No se pudo iniciar el pago con Getnet', orderNumber },
-      { status: 502 },
-    )
-  }
-
-  // 3) Flujo de respaldo sin pasarela: pedido recibido, coordinación por WhatsApp
+  // 2) Sin pasarela de pago todavía: el pedido queda registrado y el pago se
+  //    coordina por WhatsApp. La confirmación muestra el resumen y el botón.
+  //    (Para enchufar una pasarela en el futuro, basta crear la sesión aquí y
+  //    devolver su processUrl como redirectUrl.)
   return NextResponse.json({ orderNumber, redirectUrl: `${returnUrl}&pending=1`, mode: 'manual' })
 }

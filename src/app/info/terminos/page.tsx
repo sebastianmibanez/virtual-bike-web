@@ -21,8 +21,9 @@ export default function TerminosPage() {
 
       <h2>2. Pagos</h2>
       <p>
-        Los pagos se procesan de forma segura a través de <strong>Getnet</strong>. Virtual Bike no almacena los
-        datos de tu tarjeta; estos son gestionados directamente por la pasarela de pago.
+        Al confirmar tu pedido, este queda <strong>registrado</strong> y nos contactamos contigo por WhatsApp para
+        coordinar el medio de pago (transferencia u otro acordado) y el despacho. No solicitamos datos de tarjeta en
+        el sitio. La compra se concreta una vez confirmado el pago.
       </p>
 
       <h2>3. Despacho</h2>

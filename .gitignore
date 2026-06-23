@@ -38,6 +38,11 @@ yarn-error.log*
 # vercel
 .vercel
 
+# carpetas de stock descargadas (solo usamos los archivos copiados a /public)
+/black-dark-carbon-fiber-texture-with-light-effect/
+/realistic-carbon-fiber-texture-3d-background/
+*.Zone.Identifier
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -38,7 +38,7 @@ export default function CambiosPage() {
       <h2>Reembolsos</h2>
       <p>
         Cuando corresponda un reembolso, se realiza por el mismo medio de pago utilizado, una vez recibida y
-        revisada la prenda. El plazo depende del medio de pago (Getnet).
+        revisada la prenda. El reembolso se realiza por el mismo medio acordado para el pago (ej. transferencia).
       </p>
     </InfoShell>
   )

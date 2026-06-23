@@ -15,8 +15,8 @@ create table if not exists public.orders (
   subtotal        integer not null default 0,
   total           integer not null default 0,
   status          text not null default 'pending', -- pending | approved | rejected | failed
-  getnet_request_id  text,
-  getnet_process_url text,
+  payment_provider text,            -- pasarela usada (null = coordinación por WhatsApp)
+  payment_ref      text,            -- id/referencia de la transacción en la pasarela
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
