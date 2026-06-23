@@ -1,7 +1,13 @@
 @import "tailwindcss";
 
 body {
-  background: #080808;
+  background-color: #080808;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.82)),
+    url('/images/carbon-bg.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   color: #fff;
   font-family: var(--font-barlow), system-ui, sans-serif;
 }
